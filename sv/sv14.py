@@ -129,7 +129,7 @@ pearson_PCA.to_csv("../results/E-PC_Pearson.csv", index=False)
 sample = pd.concat([Z_PCA,df['PU']],axis=1)
 loo = LeaveOneOut()
 sc = MinMaxScaler(feature_range=(0, 1))
-scaled = sc.fit_transform(sample)  #array
+scaled = sc.fit_transform(sample)
 PredValue_SVR = []
 TrueValue_SVR = []
 R2_SVR = []
@@ -376,6 +376,7 @@ dfSVR.to_csv("../results/SVRestimate.csv", index=False)
 dfRFR.to_csv("../results/RFRestimate.csv", index=False)
 dfLR.to_csv("../results/LRestimate.csv", index=False)
 
+#5.1 compute mean of Evaluation
 MAPE_test_list = [np.mean(APE_test_SVR), np.mean(APE_test_RFR), np.mean(APE_test_LR)]
 MAE_test_list = [np.mean(MAE_test_SVR), np.mean(MAE_test_RFR), np.mean(MAE_test_LR)]
 MSE_test_list = [np.mean(MSE_test_SVR), np.mean(MSE_test_RFR), np.mean(MSE_test_LR)]
@@ -394,13 +395,15 @@ print('RMSE_train:', RMSE_train_list)
 print('R2_train:', R2_train_list)
 print('============================================================')
 
-
-#5.2 use model with min error
+#5.2 use model and plot
+#import model
 clfSVR = joblib.load('../results/SVR_train_model.m')
 clfRFR = joblib.load('../results/RFR_train_model.m')
 clfLR = joblib.load('../results/LR_train_model.m')
+
 samples = scaled[:,0:4]
 labels = scaled[:,-1]
+
 #SVR
 labels_pred_SVR = clfSVR.predict(samples)
 inv_labels_SVR_actual = concatenate((samples,labels_pred_SVR.reshape(-1,1)), axis=1)
